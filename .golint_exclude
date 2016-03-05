@@ -1,0 +1,5 @@
+/croner/app/
+/croner/client/
+^design/
+^app/
+^client/
