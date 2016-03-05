@@ -31,4 +31,4 @@ Date: Sat, 05 Mar 2016 00:49:00 GMT
 }
 ```
 (note the `/job` path)
-The complete API documentation is available on [swagger.goa.design](http://swagger.goa.design/github.com/rightscale/croner).
+The complete API documentation is available on [swagger.goa.design](http://swagger.goa.design/?url=rightscale%2Fcroner%2Fdesign)
