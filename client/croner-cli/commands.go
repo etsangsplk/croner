@@ -6,20 +6,20 @@ import (
 )
 
 type (
-	// IndexJobsCommand is the command line data structure for the index action of jobs
-	IndexJobsCommand struct {
+	// ShowJobCommand is the command line data structure for the show action of job
+	ShowJobCommand struct {
 	}
 )
 
-// Run makes the HTTP request corresponding to the IndexJobsCommand command.
-func (cmd *IndexJobsCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ShowJobCommand command.
+func (cmd *ShowJobCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/jobs"
+		path = "/job"
 	}
-	resp, err := c.IndexJobs(path)
+	resp, err := c.ShowJob(path)
 	if err != nil {
 		return err
 	}
@@ -28,5 +28,5 @@ func (cmd *IndexJobsCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *IndexJobsCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ShowJobCommand) RegisterFlags(cc *cobra.Command) {
 }

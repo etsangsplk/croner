@@ -6,8 +6,8 @@ import (
 	"net/url"
 )
 
-// List all jobs
-func (c *Client) IndexJobs(path string) (*http.Response, error) {
+// Show information about cron job
+func (c *Client) ShowJob(path string) (*http.Response, error) {
 	var body io.Reader
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), body)

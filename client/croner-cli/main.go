@@ -92,12 +92,12 @@ func HandleResponse(c *client.Client, resp *http.Response) {
 func RegisterCommands(app *cobra.Command, c *client.Client) {
 	var command, sub *cobra.Command
 	command = &cobra.Command{
-		Use:   "index",
-		Short: "List all jobs",
+		Use:   "show",
+		Short: "Show information about cron job",
 	}
-	tmp1 := new(IndexJobsCommand)
+	tmp1 := new(ShowJobCommand)
 	sub = &cobra.Command{
-		Use:   "jobs",
+		Use:   "job",
 		Short: "",
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
