@@ -59,5 +59,5 @@ func MountJobController(service *goa.Service, ctrl JobController) {
 		return ctrl.Show(rctx)
 	}
 	service.Mux.Handle("GET", "/job", ctrl.MuxHandler("Show", h, nil))
-	goa.Info(goa.RootContext, "mount", goa.KV{"ctrl", "Job"}, goa.KV{"action", "Show"}, goa.KV{"route", "GET /job"})
+	service.Info("mount", "ctrl", "Job", "action", "Show", "route", "GET /job")
 }

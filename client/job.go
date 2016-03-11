@@ -1,20 +1,25 @@
 package client
 
 import (
+	"golang.org/x/net/context"
 	"io"
 	"net/http"
 	"net/url"
 )
 
 // Show information about cron job
-func (c *Client) ShowJob(path string) (*http.Response, error) {
+func (c *Client) ShowJob(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
-	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), body)
 	if err != nil {
 		return nil, err
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
-	return c.Client.Do(req)
+	return c.Client.Do(ctx, req)
 }

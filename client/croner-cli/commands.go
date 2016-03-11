@@ -1,8 +1,13 @@
 package main
 
 import (
+	"github.com/goadesign/goa"
+	goaclient "github.com/goadesign/goa/client"
 	"github.com/rightscale/croner/client"
 	"github.com/spf13/cobra"
+	"golang.org/x/net/context"
+	"log"
+	"os"
 )
 
 type (
@@ -19,11 +24,15 @@ func (cmd *ShowJobCommand) Run(c *client.Client, args []string) error {
 	} else {
 		path = "/job"
 	}
-	resp, err := c.ShowJob(path)
+	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.UseLogger(context.Background(), logger)
+	resp, err := c.ShowJob(ctx, path)
 	if err != nil {
+		goa.Error(ctx, "failed", "err", err)
 		return err
 	}
-	HandleResponse(c, resp)
+
+	goaclient.HandleResponse(c.Client, resp, PrettyPrint)
 	return nil
 }
 

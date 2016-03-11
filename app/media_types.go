@@ -13,8 +13,9 @@
 package app
 
 import (
-	"github.com/goadesign/goa"
 	"time"
+
+	"github.com/goadesign/goa"
 )
 
 // Execution media type.
@@ -44,6 +45,11 @@ func (mt *Execution) Validate() (err error) {
 // Identifier: application/vnd.rightscale.croner.execution+json; type=collection
 type ExecutionCollection []*Execution
 
+// Validate validates the ExecutionCollection media type instance.
+func (mt ExecutionCollection) Validate() (err error) {
+	return
+}
+
 // Job media type.
 //
 // Identifier: application/vnd.rightscale.croner.job+json
@@ -66,6 +72,5 @@ func (mt *Job) Validate() (err error) {
 	if mt.Schedule == "" {
 		err = goa.MissingAttributeError(`response`, "schedule", err)
 	}
-
 	return
 }
