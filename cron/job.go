@@ -126,9 +126,9 @@ func (job *Job) Execute() {
 	exe.FinishedAt = time.Now()
 	exe.StdErr = string(b)
 	job.Lock()
+	defer job.Unlock()
 	delete(job.Running, exe.Pid)
 	job.Last = exe
-	job.Unlock()
 }
 
 // ToMediaType converts the job into a media type
@@ -140,22 +140,30 @@ func (job *Job) ToMediaType() *app.Job {
 	if job.Last != nil {
 		j.Last = job.Last.ToMediaType()
 	}
+	job.Lock()
+	defer job.Unlock()
 	j.Running = make(app.ExecutionCollection, len(job.Running))
-	for i, e := range job.Running {
+	i := 0
+	for _, e := range job.Running {
 		j.Running[i] = e.ToMediaType()
+		i++
 	}
 	return j
 }
 
 // ToMediaType converts the execution into a media type
 func (exe *Execution) ToMediaType() *app.Execution {
-	return &app.Execution{
-		ExitStatus: &exe.ExitStatus,
-		FinishedAt: &exe.FinishedAt,
-		Pid:        exe.Pid,
-		StartedAt:  exe.StartedAt,
-		Stderr:     &exe.StdErr,
+	e := &app.Execution{
+		Pid:       exe.Pid,
+		StartedAt: exe.StartedAt,
 	}
+	var zeroTime time.Time
+	if exe.FinishedAt != zeroTime {
+		e.FinishedAt = &exe.FinishedAt
+		e.ExitStatus = &exe.ExitStatus
+		e.Stderr = &exe.StdErr
+	}
+	return e
 }
 
 // logFatalf is equivalent to log.Fatalf but uses OsExit instead of os.Exit
