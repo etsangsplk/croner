@@ -1,0 +1,146 @@
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  Job:
+    description: A cron job together with information on the last execution
+    example:
+      cmd: bundle exec rake db:snapshot
+      last:
+        exit_status: 0
+        finished_at: 1986-08-11T10:52:37-07:00
+        pid: 5.3973885e+17
+        started_at: 1997-07-12T09:11:18-07:00
+        stderr: Non deserunt expedita molestiae placeat ut saepe.
+      running:
+      - exit_status: 0
+        finished_at: 1986-08-11T10:52:37-07:00
+        pid: 5.3973885e+17
+        started_at: 1997-07-12T09:11:18-07:00
+        stderr: Non deserunt expedita molestiae placeat ut saepe.
+      schedule: 0 20 * * *
+    properties:
+      cmd:
+        description: scheduled command
+        example: bundle exec rake db:snapshot
+        type: string
+      last:
+        description: last execution
+        example:
+          exit_status: 0
+          finished_at: 1986-08-11T10:52:37-07:00
+          pid: 5.3973885e+17
+          started_at: 1997-07-12T09:11:18-07:00
+          stderr: Non deserunt expedita molestiae placeat ut saepe.
+        properties:
+          exit_status:
+            description: Execution exit status if finished
+            example: 0
+            format: int64
+            type: integer
+          finished_at:
+            description: Execution finished at timestamp if finished
+            example: 1986-08-11T10:52:37-07:00
+            format: date-time
+            type: string
+          pid:
+            description: Execution OS pid
+            example: 5.3973885e+17
+            format: int64
+            type: integer
+          started_at:
+            description: Execution started at timestamp
+            example: 1997-07-12T09:11:18-07:00
+            format: date-time
+            type: string
+          stderr:
+            description: Execution stderr output if finished and if not empty
+            example: Non deserunt expedita molestiae placeat ut saepe.
+            type: string
+        required:
+        - pid
+        - started_at
+        type: object
+      running:
+        description: currently running executions if any
+        example:
+        - exit_status: 0
+          finished_at: 1986-08-11T10:52:37-07:00
+          pid: 5.3973885e+17
+          started_at: 1997-07-12T09:11:18-07:00
+          stderr: Non deserunt expedita molestiae placeat ut saepe.
+        items:
+          example:
+            exit_status: 0
+            finished_at: 1986-08-11T10:52:37-07:00
+            pid: 5.3973885e+17
+            started_at: 1997-07-12T09:11:18-07:00
+            stderr: Non deserunt expedita molestiae placeat ut saepe.
+          properties:
+            exit_status:
+              description: Execution exit status if finished
+              example: 0
+              format: int64
+              type: integer
+            finished_at:
+              description: Execution finished at timestamp if finished
+              example: 1986-08-11T10:52:37-07:00
+              format: date-time
+              type: string
+            pid:
+              description: Execution OS pid
+              example: 5.3973885e+17
+              format: int64
+              type: integer
+            started_at:
+              description: Execution started at timestamp
+              example: 1997-07-12T09:11:18-07:00
+              format: date-time
+              type: string
+            stderr:
+              description: Execution stderr output if finished and if not empty
+              example: Non deserunt expedita molestiae placeat ut saepe.
+              type: string
+          required:
+          - pid
+          - started_at
+          type: object
+        type: array
+      schedule:
+        description: cron schedule spec
+        example: 0 20 * * *
+        type: string
+    required:
+    - cmd
+    - schedule
+    title: 'Mediatype identifier: application/vnd.rightscale.croner.job+json'
+    type: object
+host: localhost:8080
+info:
+  description: |-
+    croner is a simple cron as a service implementation.
+    croner accepts cron-like schedule specifications on the command line.
+  title: The cron service
+  version: ""
+paths:
+  /job:
+    get:
+      description: Show information about cron job
+      operationId: job#show
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Job'
+      schemes:
+      - http
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+schemes:
+- http
+swagger: "2.0"

@@ -51,10 +51,11 @@ type JobController interface {
 func MountJobController(service *goa.Service, ctrl JobController) {
 	initService(service)
 	var h goa.Handler
+
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewShowJobContext(ctx)
 		if err != nil {
-			return goa.NewBadRequestError(err)
+			return err
 		}
 		return ctrl.Show(rctx)
 	}

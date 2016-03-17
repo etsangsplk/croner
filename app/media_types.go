@@ -13,9 +13,8 @@
 package app
 
 import (
-	"time"
-
 	"github.com/goadesign/goa"
+	"time"
 )
 
 // Execution media type.
@@ -34,21 +33,10 @@ type Execution struct {
 	Stderr *string `json:"stderr,omitempty" xml:"stderr,omitempty"`
 }
 
-// Validate validates the Execution media type instance.
-func (mt *Execution) Validate() (err error) {
-
-	return
-}
-
 // ExecutionCollection media type is a collection of Execution.
 //
 // Identifier: application/vnd.rightscale.croner.execution+json; type=collection
 type ExecutionCollection []*Execution
-
-// Validate validates the ExecutionCollection media type instance.
-func (mt ExecutionCollection) Validate() (err error) {
-	return
-}
 
 // Job media type.
 //
@@ -67,10 +55,11 @@ type Job struct {
 // Validate validates the Job media type instance.
 func (mt *Job) Validate() (err error) {
 	if mt.Cmd == "" {
-		err = goa.MissingAttributeError(`response`, "cmd", err)
+		err = goa.StackErrors(err, goa.MissingAttributeError(`response`, "cmd"))
 	}
 	if mt.Schedule == "" {
-		err = goa.MissingAttributeError(`response`, "schedule", err)
+		err = goa.StackErrors(err, goa.MissingAttributeError(`response`, "schedule"))
 	}
+
 	return
 }
