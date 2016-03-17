@@ -21,6 +21,17 @@ var _ = Resource("job", func() {
 	})
 })
 
+var _ = Resource("health_check", func() {
+	Action("do", func() {
+		Description("Health check")
+		Routing(
+			GET("/health-check"),
+			GET("//health-check"),
+		)
+		Response(OK)
+	})
+})
+
 // Job media type
 var Job = MediaType("application/vnd.rightscale.croner.job+json", func() {
 	Description("A cron job together with information on the last execution")

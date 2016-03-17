@@ -58,6 +58,8 @@ func startService(port string, job *cron.Job) {
 	service.Use(middleware.Recover())
 	c := NewJobController(service, job)
 	app.MountJobController(service, c)
+	h := NewHealthCheckController(service)
+	app.MountHealthCheckController(service, h)
 	swagger.MountController(service)
 	service.ListenAndServe(":" + port)
 }
