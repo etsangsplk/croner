@@ -38,3 +38,23 @@ func (ctx *ShowJobContext) OK(r *Job) error {
 	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.rightscale.croner.job+json")
 	return ctx.ResponseData.Send(ctx.Context, 200, r)
 }
+
+// DoHealthCheckContext provides the health_check do action context.
+type DoHealthCheckContext struct {
+	context.Context
+	*goa.ResponseData
+}
+
+// NewDoHealthCheckContext parses the incoming request URL and body, performs validations and creates the
+// context used by the health_check controller do action.
+func NewDoHealthCheckContext(ctx context.Context) (*DoHealthCheckContext, error) {
+	var err error
+	rctx := DoHealthCheckContext{Context: ctx, ResponseData: goa.Response(ctx)}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *DoHealthCheckContext) OK(resp string) error {
+	// ctx.ResponseData.Header().Set("Content-Type", "application/vnd.rightscale.croner")
+	return ctx.ResponseData.Send(ctx.Context, 200, resp)
+}

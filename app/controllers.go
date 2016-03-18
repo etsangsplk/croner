@@ -62,3 +62,25 @@ func MountJobController(service *goa.Service, ctrl JobController) {
 	service.Mux.Handle("GET", "/job", ctrl.MuxHandler("Show", h, nil))
 	service.Info("mount", "ctrl", "Job", "action", "Show", "route", "GET /job")
 }
+
+// HealthCheckController is the controller interface for the HealthCheck actions.
+type HealthCheckController interface {
+	goa.Muxer
+	Do(*DoHealthCheckContext) error
+}
+
+// MountHealthCheckController "mounts" a HealthCheck resource controller on the given service.
+func MountHealthCheckController(service *goa.Service, ctrl HealthCheckController) {
+	initService(service)
+	var h goa.Handler
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewDoHealthCheckContext(ctx)
+		if err != nil {
+			return err
+		}
+		return ctrl.Do(rctx)
+	}
+	service.Mux.Handle("GET", "/health-check", ctrl.MuxHandler("Do", h, nil))
+	service.Info("mount", "ctrl", "HealthCheck", "action", "Do", "route", "GET /health-check")
+}
