@@ -35,7 +35,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	job, err := cron.NewJob(execArgs[0], execArgs[1:len(execArgs)], *schedule)
+	s := "0 " + *schedule
+	job, err := cron.NewJob(execArgs[0], execArgs[1:len(execArgs)], s)
 	if err != nil {
 		log.Fatalf("Failed to start job: %s", err)
 		os.Exit(1)
