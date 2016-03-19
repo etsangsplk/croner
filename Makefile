@@ -12,6 +12,9 @@
 #
 DIRS=$(shell go list -f {{.Dir}} ./...)
 DEPEND=\
+	github.com/robfig/cron \
+	github.com/goadesign/middleware \
+	github.com/goadesign/goa \
 	github.com/golang/lint/golint \
 	github.com/onsi/ginkgo \
 	github.com/onsi/ginkgo/ginkgo \
