@@ -8,7 +8,7 @@ import (
 	"syscall"
 
 	"github.com/goadesign/goa"
-	"github.com/goadesign/middleware"
+	"github.com/goadesign/goa/middleware"
 	"github.com/rightscale/croner/app"
 	"github.com/rightscale/croner/cron"
 	"github.com/rightscale/croner/swagger"
@@ -56,6 +56,7 @@ func startService(port string, job *cron.Job) {
 	service := goa.New("croner")
 	service.Use(middleware.RequestID())
 	service.Use(middleware.LogRequest(true))
+	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
 	c := NewJobController(service, job)
 	app.MountJobController(service, c)

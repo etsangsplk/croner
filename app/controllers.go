@@ -18,16 +18,8 @@ import (
 	"net/http"
 )
 
-// inited is true if initService has been called
-var inited = false
-
 // initService sets up the service encoders, decoders and mux.
 func initService(service *goa.Service) {
-	if inited {
-		return
-	}
-	inited = true
-
 	// Setup encoders and decoders
 	service.Encoder(goa.NewJSONEncoder, "application/json")
 	service.Encoder(goa.NewGobEncoder, "application/gob", "application/x-gob")
@@ -39,28 +31,6 @@ func initService(service *goa.Service) {
 	// Setup default encoder and decoder
 	service.Encoder(goa.NewJSONEncoder, "*/*")
 	service.Decoder(goa.NewJSONDecoder, "*/*")
-}
-
-// JobController is the controller interface for the Job actions.
-type JobController interface {
-	goa.Muxer
-	Show(*ShowJobContext) error
-}
-
-// MountJobController "mounts" a Job resource controller on the given service.
-func MountJobController(service *goa.Service, ctrl JobController) {
-	initService(service)
-	var h goa.Handler
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		rctx, err := NewShowJobContext(ctx)
-		if err != nil {
-			return err
-		}
-		return ctrl.Show(rctx)
-	}
-	service.Mux.Handle("GET", "/job", ctrl.MuxHandler("Show", h, nil))
-	service.Info("mount", "ctrl", "Job", "action", "Show", "route", "GET /job")
 }
 
 // HealthCheckController is the controller interface for the HealthCheck actions.
@@ -75,12 +45,34 @@ func MountHealthCheckController(service *goa.Service, ctrl HealthCheckController
 	var h goa.Handler
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		rctx, err := NewDoHealthCheckContext(ctx)
+		rctx, err := NewDoHealthCheckContext(ctx, service)
 		if err != nil {
 			return err
 		}
 		return ctrl.Do(rctx)
 	}
 	service.Mux.Handle("GET", "/health-check", ctrl.MuxHandler("Do", h, nil))
-	service.Info("mount", "ctrl", "HealthCheck", "action", "Do", "route", "GET /health-check")
+	service.LogInfo("mount", "ctrl", "HealthCheck", "action", "Do", "route", "GET /health-check")
+}
+
+// JobController is the controller interface for the Job actions.
+type JobController interface {
+	goa.Muxer
+	Show(*ShowJobContext) error
+}
+
+// MountJobController "mounts" a Job resource controller on the given service.
+func MountJobController(service *goa.Service, ctrl JobController) {
+	initService(service)
+	var h goa.Handler
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewShowJobContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	service.Mux.Handle("GET", "/job", ctrl.MuxHandler("Show", h, nil))
+	service.LogInfo("mount", "ctrl", "Job", "action", "Show", "route", "GET /job")
 }

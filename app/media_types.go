@@ -55,11 +55,11 @@ type Job struct {
 // Validate validates the Job media type instance.
 func (mt *Job) Validate() (err error) {
 	if mt.Cmd == "" {
-		err = goa.StackErrors(err, goa.MissingAttributeError(`response`, "cmd"))
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "cmd"))
 	}
 	if mt.Schedule == "" {
-		err = goa.StackErrors(err, goa.MissingAttributeError(`response`, "schedule"))
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "schedule"))
 	}
 
-	return
+	return err
 }

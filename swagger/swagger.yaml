@@ -10,15 +10,15 @@ definitions:
       cmd: bundle exec rake db:snapshot
       last:
         exit_status: 0
-        finished_at: 1986-08-11T10:52:37-07:00
+        finished_at: 2015-08-08T10:18:27-07:00
         pid: 5.3973885e+17
-        started_at: 1997-07-12T09:11:18-07:00
+        started_at: 2009-04-21T22:19:08-07:00
         stderr: Non deserunt expedita molestiae placeat ut saepe.
       running:
       - exit_status: 0
-        finished_at: 1986-08-11T10:52:37-07:00
+        finished_at: 2015-08-08T10:18:27-07:00
         pid: 5.3973885e+17
-        started_at: 1997-07-12T09:11:18-07:00
+        started_at: 2009-04-21T22:19:08-07:00
         stderr: Non deserunt expedita molestiae placeat ut saepe.
       schedule: 0 20 * * *
     properties:
@@ -30,9 +30,9 @@ definitions:
         description: last execution
         example:
           exit_status: 0
-          finished_at: 1986-08-11T10:52:37-07:00
+          finished_at: 2015-08-08T10:18:27-07:00
           pid: 5.3973885e+17
-          started_at: 1997-07-12T09:11:18-07:00
+          started_at: 2009-04-21T22:19:08-07:00
           stderr: Non deserunt expedita molestiae placeat ut saepe.
         properties:
           exit_status:
@@ -42,7 +42,7 @@ definitions:
             type: integer
           finished_at:
             description: Execution finished at timestamp if finished
-            example: 1986-08-11T10:52:37-07:00
+            example: 2015-08-08T10:18:27-07:00
             format: date-time
             type: string
           pid:
@@ -52,7 +52,7 @@ definitions:
             type: integer
           started_at:
             description: Execution started at timestamp
-            example: 1997-07-12T09:11:18-07:00
+            example: 2009-04-21T22:19:08-07:00
             format: date-time
             type: string
           stderr:
@@ -67,16 +67,16 @@ definitions:
         description: currently running executions if any
         example:
         - exit_status: 0
-          finished_at: 1986-08-11T10:52:37-07:00
+          finished_at: 2015-08-08T10:18:27-07:00
           pid: 5.3973885e+17
-          started_at: 1997-07-12T09:11:18-07:00
+          started_at: 2009-04-21T22:19:08-07:00
           stderr: Non deserunt expedita molestiae placeat ut saepe.
         items:
           example:
             exit_status: 0
-            finished_at: 1986-08-11T10:52:37-07:00
+            finished_at: 2015-08-08T10:18:27-07:00
             pid: 5.3973885e+17
-            started_at: 1997-07-12T09:11:18-07:00
+            started_at: 2009-04-21T22:19:08-07:00
             stderr: Non deserunt expedita molestiae placeat ut saepe.
           properties:
             exit_status:
@@ -86,7 +86,7 @@ definitions:
               type: integer
             finished_at:
               description: Execution finished at timestamp if finished
-              example: 1986-08-11T10:52:37-07:00
+              example: 2015-08-08T10:18:27-07:00
               format: date-time
               type: string
             pid:
@@ -96,7 +96,7 @@ definitions:
               type: integer
             started_at:
               description: Execution started at timestamp
-              example: 1997-07-12T09:11:18-07:00
+              example: 2009-04-21T22:19:08-07:00
               format: date-time
               type: string
             stderr:
@@ -125,6 +125,15 @@ info:
   title: The cron service
   version: ""
 paths:
+  /health-check:
+    get:
+      description: Health check
+      operationId: health_check#do
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - http
   /job:
     get:
       description: Show information about cron job
@@ -141,6 +150,9 @@ produces:
 - application/xml
 - application/gob
 - application/x-gob
+responses:
+  OK:
+    description: OK
 schemes:
 - http
 swagger: "2.0"

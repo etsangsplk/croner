@@ -25,7 +25,6 @@ var _ = Resource("health_check", func() {
 	Action("do", func() {
 		Description("Health check")
 		Routing(
-			GET("/health-check"),
 			GET("//health-check"),
 		)
 		Response(OK)

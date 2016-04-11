@@ -64,7 +64,7 @@ func NewJob(cmd string, args []string, schedule string) (*Job, error) {
 		return nil, err
 	}
 	job.cron = c
-	log.Println("Starting %s", job.String())
+	log.Println("Starting", job.String())
 	c.Start()
 	return job, nil
 }
