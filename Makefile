@@ -42,6 +42,7 @@ test:
 generate:
 	@goagen app     -d github.com/rightscale/croner/design
 	@goagen swagger -d github.com/rightscale/croner/design
+	@rm -rf tool
 	@goagen client  -d github.com/rightscale/croner/design
 
 build: generate
