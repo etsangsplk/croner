@@ -3,9 +3,8 @@
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
-// --out=$(GOPATH)/src/github.com/rightscale/croner
 // --design=github.com/rightscale/croner/design
-// --pkg=app
+// --out=$(GOPATH)/src/github.com/rightscale/croner
 //
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
@@ -21,16 +20,16 @@ import (
 // initService sets up the service encoders, decoders and mux.
 func initService(service *goa.Service) {
 	// Setup encoders and decoders
-	service.Encoder(goa.NewJSONEncoder, "application/json")
-	service.Encoder(goa.NewGobEncoder, "application/gob", "application/x-gob")
-	service.Encoder(goa.NewXMLEncoder, "application/xml")
-	service.Decoder(goa.NewJSONDecoder, "application/json")
-	service.Decoder(goa.NewGobDecoder, "application/gob", "application/x-gob")
-	service.Decoder(goa.NewXMLDecoder, "application/xml")
+	service.Encoder.Register(goa.NewJSONEncoder, "application/json")
+	service.Encoder.Register(goa.NewGobEncoder, "application/gob", "application/x-gob")
+	service.Encoder.Register(goa.NewXMLEncoder, "application/xml")
+	service.Decoder.Register(goa.NewJSONDecoder, "application/json")
+	service.Decoder.Register(goa.NewGobDecoder, "application/gob", "application/x-gob")
+	service.Decoder.Register(goa.NewXMLDecoder, "application/xml")
 
 	// Setup default encoder and decoder
-	service.Encoder(goa.NewJSONEncoder, "*/*")
-	service.Decoder(goa.NewJSONDecoder, "*/*")
+	service.Encoder.Register(goa.NewJSONEncoder, "*/*")
+	service.Decoder.Register(goa.NewJSONDecoder, "*/*")
 }
 
 // HealthCheckController is the controller interface for the HealthCheck actions.
@@ -45,6 +44,11 @@ func MountHealthCheckController(service *goa.Service, ctrl HealthCheckController
 	var h goa.Handler
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
 		rctx, err := NewDoHealthCheckContext(ctx, service)
 		if err != nil {
 			return err
@@ -67,6 +71,11 @@ func MountJobController(service *goa.Service, ctrl JobController) {
 	var h goa.Handler
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
 		rctx, err := NewShowJobContext(ctx, service)
 		if err != nil {
 			return err

@@ -1,5 +1,5 @@
 //************************************************************************//
-// API "croner": Application Media Types
+// User Types
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -9,16 +9,33 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package app
+package client
 
 import (
-	"github.com/goadesign/goa"
+	"net/http"
 	"time"
 )
 
-// Execution media type.
-//
-// Identifier: application/vnd.rightscale.croner.execution+json
+// A cron job together with information on the last execution
+type Job struct {
+	// scheduled command
+	Cmd string `json:"cmd" xml:"cmd" form:"cmd"`
+	// last execution
+	Last *Execution `json:"last,omitempty" xml:"last,omitempty" form:"last,omitempty"`
+	// currently running executions if any
+	Running ExecutionCollection `json:"running,omitempty" xml:"running,omitempty" form:"running,omitempty"`
+	// cron schedule spec
+	Schedule string `json:"schedule" xml:"schedule" form:"schedule"`
+}
+
+// DecodeJob decodes the Job instance encoded in resp body.
+func (c *Client) DecodeJob(resp *http.Response) (*Job, error) {
+	var decoded Job
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// A job execution
 type Execution struct {
 	// Execution exit status if finished
 	ExitStatus *int `json:"exit_status,omitempty" xml:"exit_status,omitempty" form:"exit_status,omitempty"`
@@ -33,32 +50,4 @@ type Execution struct {
 }
 
 // ExecutionCollection media type is a collection of Execution.
-//
-// Identifier: application/vnd.rightscale.croner.execution+json; type=collection
 type ExecutionCollection []*Execution
-
-// Job media type.
-//
-// Identifier: application/vnd.rightscale.croner.job+json
-type Job struct {
-	// scheduled command
-	Cmd string `json:"cmd" xml:"cmd" form:"cmd"`
-	// last execution
-	Last *Execution `json:"last,omitempty" xml:"last,omitempty" form:"last,omitempty"`
-	// currently running executions if any
-	Running ExecutionCollection `json:"running,omitempty" xml:"running,omitempty" form:"running,omitempty"`
-	// cron schedule spec
-	Schedule string `json:"schedule" xml:"schedule" form:"schedule"`
-}
-
-// Validate validates the Job media type instance.
-func (mt *Job) Validate() (err error) {
-	if mt.Cmd == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "cmd"))
-	}
-	if mt.Schedule == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "schedule"))
-	}
-
-	return
-}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -11,7 +12,6 @@ import (
 	"github.com/goadesign/goa/middleware"
 	"github.com/rightscale/croner/app"
 	"github.com/rightscale/croner/cron"
-	"github.com/rightscale/croner/swagger"
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 		println("Usage of ", os.Args[0])
 		println(os.Args[0], " [ OPTIONS ] -- [ COMMAND ]")
 		flag.PrintDefaults()
-		println(`\nExample:\n%s -p 8080 -s "0 0 * * *" -- echo hello`, os.Args[0])
+		fmt.Printf("\nExample:\n%s -p 8080 -s \"0 0 * * *\" -- echo hello\n", os.Args[0])
 		os.Exit(1)
 	}
 
@@ -62,7 +62,6 @@ func startService(port string, job *cron.Job) {
 	app.MountJobController(service, c)
 	h := NewHealthCheckController(service)
 	app.MountHealthCheckController(service, h)
-	swagger.MountController(service)
 	service.ListenAndServe(":" + port)
 }
 

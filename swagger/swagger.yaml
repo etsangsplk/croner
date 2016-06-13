@@ -4,6 +4,56 @@ consumes:
 - application/gob
 - application/x-gob
 definitions:
+  Execution:
+    description: A job execution
+    example:
+      exit_status: 0
+      finished_at: 2015-08-08T10:18:27-07:00
+      pid: 5.3973885e+17
+      started_at: 2009-04-21T22:19:08-07:00
+      stderr: Non deserunt expedita molestiae placeat ut saepe.
+    properties:
+      exit_status:
+        description: Execution exit status if finished
+        example: 0
+        format: int64
+        type: integer
+      finished_at:
+        description: Execution finished at timestamp if finished
+        example: 2015-08-08T10:18:27-07:00
+        format: date-time
+        type: string
+      pid:
+        description: Execution OS pid
+        example: 5.3973885e+17
+        format: int64
+        type: integer
+      started_at:
+        description: Execution started at timestamp
+        example: 2009-04-21T22:19:08-07:00
+        format: date-time
+        type: string
+      stderr:
+        description: Execution stderr output if finished and if not empty
+        example: Non deserunt expedita molestiae placeat ut saepe.
+        type: string
+    required:
+    - pid
+    - started_at
+    title: 'Mediatype identifier: application/vnd.rightscale.croner.execution+json'
+    type: object
+  ExecutionCollection:
+    example:
+    - exit_status: 0
+      finished_at: 2015-08-08T10:18:27-07:00
+      pid: 5.3973885e+17
+      started_at: 2009-04-21T22:19:08-07:00
+      stderr: Non deserunt expedita molestiae placeat ut saepe.
+    items:
+      $ref: '#/definitions/Execution'
+    title: 'Mediatype identifier: application/vnd.rightscale.croner.execution+json;
+      type=collection'
+    type: array
   Job:
     description: A cron job together with information on the last execution
     example:
@@ -27,87 +77,9 @@ definitions:
         example: bundle exec rake db:snapshot
         type: string
       last:
-        description: last execution
-        example:
-          exit_status: 0
-          finished_at: 2015-08-08T10:18:27-07:00
-          pid: 5.3973885e+17
-          started_at: 2009-04-21T22:19:08-07:00
-          stderr: Non deserunt expedita molestiae placeat ut saepe.
-        properties:
-          exit_status:
-            description: Execution exit status if finished
-            example: 0
-            format: int64
-            type: integer
-          finished_at:
-            description: Execution finished at timestamp if finished
-            example: 2015-08-08T10:18:27-07:00
-            format: date-time
-            type: string
-          pid:
-            description: Execution OS pid
-            example: 5.3973885e+17
-            format: int64
-            type: integer
-          started_at:
-            description: Execution started at timestamp
-            example: 2009-04-21T22:19:08-07:00
-            format: date-time
-            type: string
-          stderr:
-            description: Execution stderr output if finished and if not empty
-            example: Non deserunt expedita molestiae placeat ut saepe.
-            type: string
-        required:
-        - pid
-        - started_at
-        type: object
+        $ref: '#/definitions/Execution'
       running:
-        description: currently running executions if any
-        example:
-        - exit_status: 0
-          finished_at: 2015-08-08T10:18:27-07:00
-          pid: 5.3973885e+17
-          started_at: 2009-04-21T22:19:08-07:00
-          stderr: Non deserunt expedita molestiae placeat ut saepe.
-        items:
-          example:
-            exit_status: 0
-            finished_at: 2015-08-08T10:18:27-07:00
-            pid: 5.3973885e+17
-            started_at: 2009-04-21T22:19:08-07:00
-            stderr: Non deserunt expedita molestiae placeat ut saepe.
-          properties:
-            exit_status:
-              description: Execution exit status if finished
-              example: 0
-              format: int64
-              type: integer
-            finished_at:
-              description: Execution finished at timestamp if finished
-              example: 2015-08-08T10:18:27-07:00
-              format: date-time
-              type: string
-            pid:
-              description: Execution OS pid
-              example: 5.3973885e+17
-              format: int64
-              type: integer
-            started_at:
-              description: Execution started at timestamp
-              example: 2009-04-21T22:19:08-07:00
-              format: date-time
-              type: string
-            stderr:
-              description: Execution stderr output if finished and if not empty
-              example: Non deserunt expedita molestiae placeat ut saepe.
-              type: string
-          required:
-          - pid
-          - started_at
-          type: object
-        type: array
+        $ref: '#/definitions/ExecutionCollection'
       schedule:
         description: cron schedule spec
         example: 0 20 * * *
@@ -134,6 +106,7 @@ paths:
           description: OK
       schemes:
       - http
+      summary: do
   /job:
     get:
       description: Show information about cron job
@@ -145,6 +118,7 @@ paths:
             $ref: '#/definitions/Job'
       schemes:
       - http
+      summary: show
 produces:
 - application/json
 - application/xml

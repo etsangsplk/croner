@@ -80,7 +80,7 @@ func (job *Job) Stop() {
 	log.Println("Exiting")
 }
 
-// Be nice to tests
+// OsExit is to be nice to tests
 var OsExit = os.Exit
 
 // Execute job
